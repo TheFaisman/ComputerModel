@@ -1,6 +1,6 @@
 #include <iostream>
 
-enum LogicLevel {
+enum Voltage {
     Strong_Low = 0,
     Weak_Low,
     High_Z,
@@ -8,42 +8,29 @@ enum LogicLevel {
     Strong_High
 };
 
+// Create a synonym for a pointer to a voltage; Terminal
+typedef Voltage* Terminal;
+
 class Transistor {
 protected:
-    LogicLevel drain_;
-    LogicLevel gate_;
-    LogicLevel source_;
+    Terminal drain_;
+    Terminal gate_;
+    Terminal source_;
 
     bool conducting_;
 
-    LogicLevel const threshold_ = Weak_High;
+    Voltage const threshold_ = Weak_High;
 
 public:
-    Transistor(LogicLevel drain, LogicLevel gate, LogicLevel source) : drain_(drain), gate_(gate), source_(source) {
+    Transistor(Terminal drain, Terminal gate, Terminal source) : drain_(drain), gate_(gate), source_(source) {
         std::cout << "Transistor constructor executed." << std::endl;
     }
 
-    LogicLevel ReadGate() { return gate_; }
-    LogicLevel ReadSource() { return source_; }
-    LogicLevel ReadDrain() { return drain_; }
+    Voltage ReadGate() { return *gate_; }
+    Voltage ReadSource() { return *source_; }
+    Voltage ReadDrain() { return *drain_; }
 
-    void SetGate(LogicLevel gate) {
-        this->gate_ = gate;
-        if (this->gate_ >= threshold_) {
-            this->conducting_ = true;
-            this->drain_ = this->source_;
-        } else {
-            this->drain_ = High_Z;
-            this->conducting_ = false;
-        }
-    }
+    void SetGateVoltage(Voltage gate_voltage);
 };
 
-class NMOS : public Transistor {
-private:
-    
-
-public:
-
-};
 
